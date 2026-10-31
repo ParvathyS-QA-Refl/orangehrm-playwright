@@ -6,6 +6,7 @@ node_modules/
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
+/.claude/
 # Environment files (contain passwords) – never upload
 .env
 .env.*

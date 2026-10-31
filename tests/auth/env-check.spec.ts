@@ -1,5 +1,8 @@
 import { test, expect } from '@playwright/test';
 
+// Start logged out: with the saved admin session, the login page would redirect to the Dashboard
+test.use({ storageState: { cookies: [], origins: [] } });
+
 // Smoke check: proves the env setup works and the login page loads
 test('login page shows the login form @smoke', async ({ page }) => {
   // Step 1: Open the login page (baseURL from the env file is added in front automatically)

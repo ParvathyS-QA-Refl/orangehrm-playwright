@@ -15,10 +15,19 @@ jobs:
         node-version: lts/*
     - name: Install dependencies
       run: npm ci
+    # Only Chromium is used, so install just that browser (faster)
     - name: Install Playwright Browsers
-      run: npx playwright install --with-deps
+      run: npx playwright install --with-deps chromium
     - name: Run Playwright tests
       run: npx playwright test
+      env:
+        # Which config/.env.<name> to use; the file is not in Git, so values come from below
+        TEST_ENV: qa
+        # The URL is public, so it is a plain value, not a secret
+        BASE_URL: https://opensource-demo.orangehrmlive.com
+        # Credentials come from GitHub repository secrets (Settings > Secrets and variables > Actions)
+        ADMIN_USERNAME: ${{ secrets.ADMIN_USERNAME }}
+        ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
       with:
