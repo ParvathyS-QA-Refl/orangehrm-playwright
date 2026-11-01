@@ -30,14 +30,17 @@ export class EmployeeListPage {
     await this.searchButton.click();
   }
 
-  // The results-table row that contains our unique Employee Id
+  // The results-table row whose Id CELL is exactly our unique Employee Id.
+  // The header row has no cells (only column headers), so it can never match.
   rowFor(employee: Employee): Locator {
-    return this.page.getByRole('row').filter({ hasText: employee.employeeId });
+    return this.page
+      .getByRole('row')
+      .filter({ has: this.page.getByRole('cell', { name: employee.employeeId, exact: true }) });
   }
 
-  // Click the trash icon in our employee's row (opens the confirm dialog).
+  // The trash button INSIDE our employee's row (so we can't delete someone else).
   // The icon button has no accessible name, so we target the trash icon (documented exception).
-  async clickDelete(employee: Employee) {
-    await this.rowFor(employee).locator('button:has(.bi-trash)').click();
+  deleteButtonFor(employee: Employee): Locator {
+    return this.rowFor(employee).locator('button:has(.bi-trash)');
   }
 }

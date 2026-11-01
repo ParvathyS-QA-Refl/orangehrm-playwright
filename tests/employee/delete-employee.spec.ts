@@ -17,8 +17,13 @@ test.describe('Delete employee', () => {
         await expect(employeeListPage.rowFor(employee), 'New employee should be in the results').toBeVisible();
       });
 
-      await test.step('Click the trash icon and confirm with "Yes, Delete"', async () => {
-        await employeeListPage.clickDelete(employee);
+      await test.step('Click the trash icon in OUR row and confirm with "Yes, Delete"', async () => {
+        // Wait (web-first) until our row and its trash button are on screen before clicking,
+        // so a slow table refresh can't make us click too early
+        const row = employeeListPage.rowFor(employee);
+        await expect(row).toBeVisible();
+        await expect(employeeListPage.deleteButtonFor(employee)).toBeVisible();
+        await employeeListPage.deleteButtonFor(employee).click();
         await expect(confirmDialog.dialog).toContainText('Are you Sure?');
         await confirmDialog.confirm();
       });
