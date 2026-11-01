@@ -1,7 +1,9 @@
 import { test as base, type APIRequestContext } from '@playwright/test';
 import { AddEmployeePage } from '../pages/AddEmployeePage';
 import { PersonalDetailsPage } from '../pages/PersonalDetailsPage';
+import { EmployeeListPage } from '../pages/EmployeeListPage';
 import { Toast } from '../pages/components/Toast';
+import { ConfirmDialog } from '../pages/components/ConfirmDialog';
 import { type Employee } from '../data/employee-data';
 
 // Remembers which employees a test created, so they can be deleted afterwards
@@ -12,6 +14,12 @@ export class CreatedEmployees {
 
   add(empNumber: number) {
     this.empNumbers.push(empNumber);
+  }
+
+  // Call this when the TEST itself deleted the employee, so cleanup doesn't try again
+  markDeleted(empNumber: number) {
+    const index = this.empNumbers.indexOf(empNumber);
+    if (index !== -1) this.empNumbers.splice(index, 1);
   }
 
   // Fast precondition for edit/delete tests: create the employee through OrangeHRM's API
@@ -37,7 +45,9 @@ export class CreatedEmployees {
 type Fixtures = {
   addEmployeePage: AddEmployeePage;
   personalDetailsPage: PersonalDetailsPage;
+  employeeListPage: EmployeeListPage;
   toast: Toast;
+  confirmDialog: ConfirmDialog;
   createdEmployees: CreatedEmployees;
 };
 
@@ -50,8 +60,14 @@ export const test = base.extend<Fixtures>({
   personalDetailsPage: async ({ page }, use) => {
     await use(new PersonalDetailsPage(page));
   },
+  employeeListPage: async ({ page }, use) => {
+    await use(new EmployeeListPage(page));
+  },
   toast: async ({ page }, use) => {
     await use(new Toast(page));
+  },
+  confirmDialog: async ({ page }, use) => {
+    await use(new ConfirmDialog(page));
   },
 
   // Cleanup fixture: like a "postcondition" step that ALWAYS runs, pass or fail.
