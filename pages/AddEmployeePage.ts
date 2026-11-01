@@ -59,14 +59,13 @@ export class AddEmployeePage {
     await this.page.goto('/web/index.php/pim/addEmployee');
   }
 
-  // Fill only the required fields: First Name and Last Name
-  async fillRequiredFields(employee: Employee) {
+  // Fill the required fields (First and Last Name) and our unique Employee Id.
+  // Why the Id: OrangeHRM pre-fills the NEXT free number, so two forms opened at the same
+  // time (parallel tests, other demo users) get the same Id and one save fails with
+  // "Employee Id already exists". Our own unique Id avoids that clash and lets us search for it.
+  async fillNameAndId(employee: Employee) {
     await this.firstNameInput.fill(employee.firstName);
     await this.lastNameInput.fill(employee.lastName);
-  }
-
-  // Replace the auto-filled Employee Id with our unique one (so we can search for it later)
-  async fillEmployeeId(employee: Employee) {
     await this.employeeIdInput.fill(employee.employeeId);
   }
 
