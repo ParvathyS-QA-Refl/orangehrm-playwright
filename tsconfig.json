@@ -1,0 +1,19 @@
+{
+  // Used only for type checking (npm run typecheck); Playwright runs the .ts files itself
+  "compilerOptions": {
+    "target": "ES2022",
+    // Matches "type": "commonjs" in package.json (Node decides how files are loaded)
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    // Strict mode catches the most mistakes (e.g. possibly-undefined values)
+    "strict": true,
+    // Allows `import fs from 'fs'` style imports of Node/CommonJS packages
+    "esModuleInterop": true,
+    // Don't type-check library files in node_modules (faster, not our code)
+    "skipLibCheck": true,
+    // Only check, never write .js files
+    "noEmit": true,
+    "types": ["node"]
+  },
+  "include": ["playwright.config.ts", "tests/**/*.ts", "pages/**/*.ts", "fixtures/**/*.ts", "data/**/*.ts", "utils/**/*.ts"]
+}

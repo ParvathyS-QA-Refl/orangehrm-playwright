@@ -18,6 +18,9 @@ jobs:
     # Only Chromium is used, so install just that browser (faster)
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps chromium
+    # Catch TypeScript mistakes (wrong types, typos) before spending time on browser tests
+    - name: Type check
+      run: npm run typecheck
     - name: Run Playwright tests
       run: npx playwright test
       env:
