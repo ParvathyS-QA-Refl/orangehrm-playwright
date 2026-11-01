@@ -1,9 +1,8 @@
 import { defineConfig, devices } from '@playwright/test';
 // Loads config/.env.<TEST_ENV> and checks all required variables exist
 import { env } from './utils/env';
-
-// File where the setup project saves the logged-in admin session
-const ADMIN_AUTH_FILE = 'playwright/.auth/admin.json';
+// File where the setup project saves the logged-in admin session (defined once, shared with auth.setup.ts)
+import { ADMIN_AUTH_FILE } from './utils/constants';
 
 /**
  * See https://playwright.dev/docs/test-configuration.
