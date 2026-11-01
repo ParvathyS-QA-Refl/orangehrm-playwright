@@ -37,3 +37,17 @@ export function createLoginDetails(): LoginDetails {
     password: `Auto_${unique}_9!`,
   };
 }
+
+// The two system-user roles that exist on the demo site (checked live in Admin > Add User)
+export type UserRole = 'Admin' | 'ESS';
+
+// A system user = login details + role + Enabled/Disabled, linked to one employee
+export type SystemUser = LoginDetails & {
+  role: UserRole;
+  enabled: boolean;
+};
+
+// Example: { username: 'auto_mvxw7fcx3k', password: 'Auto_mvxw7fcx3k_9!', role: 'ESS', enabled: true }
+export function createSystemUser(role: UserRole = 'ESS', enabled = true): SystemUser {
+  return { ...createLoginDetails(), role, enabled };
+}
