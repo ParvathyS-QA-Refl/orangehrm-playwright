@@ -17,9 +17,10 @@ export class AdminUsersPage {
     this.accessDeniedAlert = page.getByRole('alert');
   }
 
-  // Open the Users list directly (this is also the URL an ESS user must NOT be able to open)
+  // Open the Users list directly (this is also the URL an ESS user must NOT be able to open).
+  // Returns the server's answer, so a test can check its HTTP status (e.g. 403 = forbidden).
   async goto() {
-    await this.page.goto('/web/index.php/admin/viewSystemUsers');
+    return this.page.goto('/web/index.php/admin/viewSystemUsers');
   }
 
   // Filter the list by our unique username
