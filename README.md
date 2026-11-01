@@ -159,6 +159,13 @@ Copy-Item config\.env.example config\.env.qa
 Copy-Item config\.env.example config\.env.staging   # optional, only for staging runs
 ```
 
+On macOS/Linux, step 4 is:
+
+```bash
+cp config/.env.example config/.env.qa
+cp config/.env.example config/.env.staging   # optional, only for staging runs
+```
+
 Then edit `config\.env.qa` (and `config\.env.staging`) with real values:
 
 ```text
@@ -324,7 +331,7 @@ Each OrangeHRM page has one class in [pages/](pages/) that holds its locators an
 
 ### 6. Locator strategy, with documented CSS exceptions
 
-Order of preference: `getByRole` → `getByText` → `getByLabel` → `getByPlaceholder`. No XPath, no position-based selectors such as `nth-child`, and no `.first()` to silence strict mode. Rows are found by their unique data (for example, the cell that is exactly our Employee Id).
+Order of preference: `getByRole` → `getByLabel` → `getByPlaceholder` → `getByText`. No XPath, no position-based selectors such as `nth-child`, and no `.first()` to silence strict mode. Rows are found by their unique data (for example, the cell that is exactly our Employee Id).
 OrangeHRM's UI library doesn't link most labels to their inputs and gives some widgets no role or name. In those cases a stable CSS class is used, **always with a comment explaining why**:
 
 | CSS used | Why |
