@@ -9,6 +9,9 @@ import { ADMIN_AUTH_FILE } from './utils/constants';
  */
 export default defineConfig({
   testDir: './tests',
+  /* The demo failure test (tests/demo) fails on purpose, so skip it in every normal and CI run.
+     Only `npm run demo:failure` sets DEMO_FAILURE=1 and includes it. */
+  testIgnore: process.env.DEMO_FAILURE === '1' ? [] : ['**/demo/**'],
   /* Run tests in files in parallel - safe because each test creates its own data */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */

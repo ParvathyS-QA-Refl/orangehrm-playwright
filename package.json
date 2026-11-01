@@ -7,6 +7,11 @@
     "test": "playwright test",
     "test:qa": "cross-env TEST_ENV=qa playwright test",
     "test:staging": "cross-env TEST_ENV=staging playwright test",
+    "test:smoke": "playwright test --grep @smoke",
+    "test:regression": "playwright test --grep @regression",
+    "test:admin": "playwright test --grep @admin",
+    "test:ess": "playwright test --grep @ess",
+    "demo:failure": "cross-env DEMO_FAILURE=1 playwright test --grep @demo-failure --project=chromium",
     "report": "playwright show-report",
     "typecheck": "tsc --noEmit"
   },
