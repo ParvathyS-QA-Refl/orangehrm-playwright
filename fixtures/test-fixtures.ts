@@ -1,14 +1,36 @@
-import { test as base } from '@playwright/test';
+import { test as base, type APIRequestContext } from '@playwright/test';
 import { AddEmployeePage } from '../pages/AddEmployeePage';
 import { PersonalDetailsPage } from '../pages/PersonalDetailsPage';
 import { Toast } from '../pages/components/Toast';
+import { type Employee } from '../data/employee-data';
 
 // Remembers which employees a test created, so they can be deleted afterwards
 export class CreatedEmployees {
   readonly empNumbers: number[] = [];
 
+  constructor(private readonly request: APIRequestContext) {}
+
   add(empNumber: number) {
     this.empNumbers.push(empNumber);
+  }
+
+  // Fast precondition for edit/delete tests: create the employee through OrangeHRM's API
+  // (the UI way is already tested in add-employee.spec.ts). It is registered for cleanup.
+  async createViaApi(employee: Employee): Promise<number> {
+    const response = await this.request.post('/web/index.php/api/v2/pim/employees', {
+      data: {
+        firstName: employee.firstName,
+        middleName: '',
+        lastName: employee.lastName,
+        employeeId: employee.employeeId,
+      },
+    });
+    const body = await response.json();
+    if (!response.ok() || typeof body?.data?.empNumber !== 'number') {
+      throw new Error(`Create employee via API failed: HTTP ${response.status()} ${JSON.stringify(body)}`);
+    }
+    this.add(body.data.empNumber);
+    return body.data.empNumber;
   }
 }
 
@@ -34,7 +56,8 @@ export const test = base.extend<Fixtures>({
 
   // Cleanup fixture: like a "postcondition" step that ALWAYS runs, pass or fail.
   createdEmployees: async ({ page }, use, testInfo) => {
-    const created = new CreatedEmployees();
+    // page.request shares the logged-in admin cookies, so API calls are authorised
+    const created = new CreatedEmployees(page.request);
 
     // Everything before use() = setup, the test runs inside use(), everything after = teardown
     await use(created);
